@@ -1,9 +1,4 @@
 import math as mp
-from symtable import Symbol
-from scipy.misc import derivative
-import numpy as np
-from scipy.optimize import fmin
-import scipy.optimize as cs
 from sympy import *
 import matplotlib.pyplot as plt
 
@@ -14,7 +9,41 @@ def inputFunc(x):
    return mp.sin(3*x) / (mp.sqrt(x) + 5 )
    #return mp.sin(2 * x) / (x**5 + x + 1)  # Таня
 
+def inputFunc2(x,y):# задание 2
+    return y/(1+x) - (0.5 * y**2)
 
+def Runge_Kuta3 ():
+    x = 0
+    y = 1
+    h = 0.1
+    tmp=0
+    n=0
+    while (abs(y-tmp)>10**-5):
+        tmp = y
+        k1 = h*inputFunc2(x, y)
+        k2 = h*inputFunc2(x + h/2, y + k1/2)
+        k3 = h*inputFunc2(x + h, y + 2*k2 - k1)
+        x = x + h
+        y = y + (k1 + 4*k2+k3)/6
+        n+=1
+
+    return n, y
+def Runge_Kuta4():
+    x = 0
+    y = 1
+    h = 0.1
+    tmp = 0
+    n = 0
+    while(abs(tmp - y)>10**-5):
+        tmp = y
+        k1 = h*inputFunc2(x,y)
+        k2 = h*inputFunc2(x + h/2, y + k1/2)
+        k3 = h*inputFunc2(x + h/2, y + k2/2)
+        k4 = h*inputFunc2(x + h, y + k3)
+        x+=h
+        y+=(k1 + 2*k2+2*k3+k4)/6
+        n+=1
+    return n,y
 def D_2X(x):
     return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
     #return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
@@ -47,7 +76,7 @@ def plot_D_2X(a,b,maxi):
     plt.figure("График 2 производной ")
     plt.grid(True)
 
-    plt.plot(x, y, point[0], point[1], 'o')
+    plt.plot(x, y, point[0], -point[1], 'o')
 
 
 def maxi(a,b):
@@ -88,7 +117,7 @@ if __name__ == "__main__":
 
     a = 4
     b = 6
-    n= 5
+    n = 10
 
     M2 = maxi(a,b)
     plot_D_2X(a,b,M2)
@@ -101,5 +130,11 @@ if __name__ == "__main__":
 
     print("Cимпсон  |  n = 10","   I ~ ",simp)
     plt.show()
+    rk = Runge_Kuta3()
+    print("Рунге-Кута - 3 порядка | ", "n = " ,rk[0], "y' = ", rk[1])
+    rk2 = Runge_Kuta4()
+    print("Рунге-Кута - 4 порядка | ", "n = " ,rk2[0], "y' = ", rk2[1])
+
+
 
 
