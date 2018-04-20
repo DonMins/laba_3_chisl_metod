@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 EPS = 10**-5
 PHI = (mp.sqrt(5)+1)/2
-JUST = 0.0106229615509125
+
 def inputFunc(x):
    return mp.sin(3*x) / (mp.sqrt(x) + 5 )
    #return mp.sin(2 * x) / (x**5 + x + 1)  # Таня
@@ -12,38 +12,68 @@ def inputFunc(x):
 def inputFunc2(x,y):# задание 2
     return y/(1+x) - (0.5 * y**2)
 
+def DxInputFunc2(x,y):
+    return -y/((x+1)**2)
+
+
 def Runge_Kuta3 ():
     x = 0
     y = 1
     h = 0.1
     tmp=0
     n=0
-    while (abs(y-tmp)>10**-5):
+    X = []
+    Y= []
+    while (n<3):
         tmp = y
         k1 = h*inputFunc2(x, y)
         k2 = h*inputFunc2(x + h/2, y + k1/2)
         k3 = h*inputFunc2(x + h, y + 2*k2 - k1)
         x = x + h
         y = y + (k1 + 4*k2+k3)/6
+        X.append(x)
+        Y.append(y)
         n+=1
 
-    return n, y
+    return n,y,X, Y
 def Runge_Kuta4():
     x = 0
     y = 1
     h = 0.1
     tmp = 0
     n = 0
-    while(abs(tmp - y)>10**-5):
+    X = []
+    Y = []
+    while(n<3):
         tmp = y
         k1 = h*inputFunc2(x,y)
-        k2 = h*inputFunc2(x + h/2, y + k1/2)
-        k3 = h*inputFunc2(x + h/2, y + k2/2)
-        k4 = h*inputFunc2(x + h, y + k3)
+        k2 = h*inputFunc2(x + h/3, y + k1/3)
+        k3 = h*inputFunc2(x + 2*h/3, y - k1/3+k2)
+        k4 = h*inputFunc2(x + h, y + k1+k3-k2)
         x+=h
-        y+=(k1 + 2*k2+2*k3+k4)/6
+        y+=(k1 + 3*k2+3*k3+k4)/8
         n+=1
-    return n,y
+        X.append(x)
+        Y.append(y)
+    return n, y, X, Y
+
+def prognoz():
+    x = 0
+    y = 1
+    h = 0.1
+    Y= []
+    X=[]
+    n=0
+    while(n<3):
+        yh2 = y+h**2*DxInputFunc2(x,y)
+        y = y+h*inputFunc2(x,y)+1/2*(inputFunc2(x+h**2,yh2)-inputFunc2(x,y))
+        n+=1
+        x=x+h
+        X.append(x)
+        Y.append(y)
+    return X,Y,y
+
+
 def D_2X(x):
     return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
     #return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
@@ -129,12 +159,17 @@ if __name__ == "__main__":
     print("Трапеция | ","n = ",trap[1]," I ~ ",trap[0])
 
     print("Cимпсон  |  n = 10","   I ~ ",simp)
-    plt.show()
+
     rk = Runge_Kuta3()
     print("Рунге-Кута - 3 порядка | ", "n = " ,rk[0], "y' = ", rk[1])
     rk2 = Runge_Kuta4()
     print("Рунге-Кута - 4 порядка | ", "n = " ,rk2[0], "y' = ", rk2[1])
+    pk = prognoz()
+    print("Прогноза коррекции | ", "n = ", "y' = ", pk[2])
+    plt.figure("Графики")
+    plt.grid(True)
+    leg1,leg2,leg3 = plt.plot(rk[2],rk[3],rk2[2], rk2[3],pk[0],pk[1])
+    plt.legend((leg1,leg2,leg3),("Рунге- Кута 3 порядка","Рунге- Кута 4 порядка","Прогноза коррекции"))
 
-
-
-
+    plt.grid(True)
+    plt.show()
