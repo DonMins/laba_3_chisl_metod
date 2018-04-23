@@ -1,6 +1,7 @@
 import math as mp
 from sympy import *
 import matplotlib.pyplot as plt
+import numpy as np
 
 EPS = 10**-5
 PHI = (mp.sqrt(5)+1)/2
@@ -65,7 +66,7 @@ def prognoz():
     X=[]
     n=0
     while(n<3):
-        yh2 = y+h**2*DxInputFunc2(x,y)
+        yh2 = y+h**2*inputFunc2(x,y)+h**4
         y = y+h*inputFunc2(x,y)+1/2*(inputFunc2(x+h**2,yh2)-inputFunc2(x,y))
         n+=1
         x=x+h
@@ -161,11 +162,11 @@ if __name__ == "__main__":
     print("Cимпсон  |  n = 10","   I ~ ",simp)
 
     rk = Runge_Kuta3()
-    print("Рунге-Кута - 3 порядка | ", "n = " ,rk[0], "y' = ", rk[1])
+    print("Рунге-Кута - 3 порядка | ", "n = " ,rk[0], "|  y' = ", np.round(rk[1],5))
     rk2 = Runge_Kuta4()
-    print("Рунге-Кута - 4 порядка | ", "n = " ,rk2[0], "y' = ", rk2[1])
+    print("Рунге-Кута - 4 порядка | ", "n = " ,rk2[0], "|  y' = ", np.round(rk2[1],5))
     pk = prognoz()
-    print("Прогноза коррекции | ", "n = ", "y' = ", pk[2])
+    print("Прогноза коррекции | ", "n = ","упс", "|  y' = ", np.round(pk[2],5))
     plt.figure("Графики")
     plt.grid(True)
     leg1,leg2,leg3 = plt.plot(rk[2],rk[3],rk2[2], rk2[3],pk[0],pk[1])
