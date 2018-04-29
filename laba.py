@@ -73,8 +73,8 @@ def prognoz():
 
 def D_2X(x):
     return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
-    #return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
-     #     + 4*(-5*x**4 - 1)*cos(2*x)/(x**5 + x + 1)**2 - 4*sin(2*x)/(x**5 + x + 1) # ТАНЯ
+   #  return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
+   #        + 4*(-5*x**4 - 1)*cos(2*x)/(x**5 + x + 1)**2 - 4*sin(2*x)/(x**5 + x + 1) # ТАНЯ
 
 def plot_func (a,b):
     x = []
@@ -135,12 +135,12 @@ def Simpson(a,b,m):
     n=2*m
     h = (b-a)/n
     I2=0
-    I4=inputFunc(a+0.5*h)
-    for i in range(1,n):
-        I4+=inputFunc(a+(i+0.5)*h)
-        I2+=inputFunc(a+i*h)
+    I4=inputFunc(a+h)
+    for i in range(1,m):
+        I4+=inputFunc(a+(2*i+1)*h)
+        I2+=inputFunc(a+2*i*h)
 
-    I = (inputFunc(a) + inputFunc(b)+4*I4+2*I2)*h/6
+    I = (inputFunc(a) + inputFunc(b)+4*I4+2*I2)*h/3
 
     return I
 if __name__ == "__main__":
