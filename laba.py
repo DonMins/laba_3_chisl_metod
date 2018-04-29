@@ -7,8 +7,8 @@ EPS = 10**-5
 PHI = (mp.sqrt(5)+1)/2
 
 def inputFunc(x):
-   return mp.sin(3*x) / (mp.sqrt(x) + 5 )
-   #return mp.sin(2 * x) / (x**5 + x + 1)  # Таня
+  # return mp.sin(3*x) / (mp.sqrt(x) + 5 )
+   return mp.sin(2 * x) / (x**5 + x + 1)  # Таня
 
 def inputFunc2(x,y):# задание 2
     return y/(1+x) - (0.5 * y**2)
@@ -72,9 +72,9 @@ def prognoz():
     return X,Y
 
 def D_2X(x):
-    return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
-   #  return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
-   #        + 4*(-5*x**4 - 1)*cos(2*x)/(x**5 + x + 1)**2 - 4*sin(2*x)/(x**5 + x + 1) # ТАНЯ
+    #return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
+    return -20*x**3*sin(2*x)/(x**5 + x + 1)**2 + (-10*x**4 - 2)*(-5*x**4 - 1)*sin(2*x)/(x**5 + x + 1)**3 \
+          + 4*(-5*x**4 - 1)*cos(2*x)/(x**5 + x + 1)**2 - 4*sin(2*x)/(x**5 + x + 1) # ТАНЯ
 
 def plot_func (a,b):
     x = []
@@ -124,7 +124,7 @@ def trapez(a,b,M2):
     n = round(n)
     h=(b-a)/n
     I=0
-    for i in range(1,n,1):
+    for i in range(1,n):
         j=a+h*i
         I+=inputFunc(j)
     res = ((inputFunc(a)+inputFunc(b))/2 + I)*h
@@ -145,8 +145,8 @@ def Simpson(a,b,m):
     return I
 if __name__ == "__main__":
 
-    a = 4
-    b = 6
+    a = 0
+    b = 1
     # n = 2m
     m = 5
 
