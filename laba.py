@@ -21,12 +21,10 @@ def Runge_Kuta3 ():
     x = 0
     y = 1
     h = 0.1
-    tmp=0
     n=0
     X = []
     Y= []
     while (n<3):
-        tmp = y
         k1 = h*inputFunc2(x, y)
         k2 = h*inputFunc2(x + h/2, y + k1/2)
         k3 = h*inputFunc2(x + h, y + 2*k2 - k1)
@@ -35,28 +33,27 @@ def Runge_Kuta3 ():
         X.append(x)
         Y.append(y)
         n+=1
+    return X, Y
 
-    return n,y,X, Y
 def Runge_Kuta4():
     x = 0
     y = 1
     h = 0.1
-    tmp = 0
     n = 0
     X = []
     Y = []
     while(n<3):
-        tmp = y
+
         k1 = h*inputFunc2(x,y)
         k2 = h*inputFunc2(x + h/3, y + k1/3)
         k3 = h*inputFunc2(x + 2*h/3, y - k1/3+k2)
         k4 = h*inputFunc2(x + h, y + k1+k3-k2)
-        x+=h
+        x= x + h
         y+=(k1 + 3*k2+3*k3+k4)/8
         n+=1
         X.append(x)
         Y.append(y)
-    return n, y, X, Y
+    return X, Y
 
 def prognoz():
     x = 0
@@ -66,14 +63,13 @@ def prognoz():
     X=[]
     n=0
     while(n<3):
-        yh2 = y+h**2*inputFunc2(x,y)+h**4
+        yh2 = y+h**2*inputFunc2(x,y)
         y = y+h*inputFunc2(x,y)+1/2*(inputFunc2(x+h**2,yh2)-inputFunc2(x,y))
         n+=1
         x=x+h
         X.append(x)
         Y.append(y)
-    return X,Y,y
-
+    return X,Y
 
 def D_2X(x):
     return -9*sin(3*x)/(sqrt(x) + 5) + sin(3*x)/(2*x*(sqrt(x) + 5)**3) - 3*cos(3*x)/(sqrt(x)*(sqrt(x) + 5)**2) + sin(3*x)/(4*x**(3/2)*(sqrt(x) + 5)**2)
@@ -132,45 +128,58 @@ def trapez(a,b,M2):
         j=a+h*i
         I+=inputFunc(j)
     res = ((inputFunc(a)+inputFunc(b))/2 + I)*h
+
     return res,n
 
-def Simpson(a,b,n):
-    N= 2*n
-    h = (b-a)/N
+def Simpson(a,b,m):
+    n=2*m
+    h = (b-a)/n
     I2=0
-    I4=inputFunc(a+h)
-    for i in range(2,N,2):
-        I4+=inputFunc(a+(i+1)*h)
+    I4=inputFunc(a+0.5*h)
+    for i in range(1,n):
+        I4+=inputFunc(a+(i+0.5)*h)
         I2+=inputFunc(a+i*h)
-    I = (inputFunc(a) + inputFunc(b)+4*I4+2*I2)*h/3
+
+    I = (inputFunc(a) + inputFunc(b)+4*I4+2*I2)*h/6
+
     return I
 if __name__ == "__main__":
 
     a = 4
     b = 6
-    n = 10
+    # n = 2m
+    m = 5
 
     M2 = maxi(a,b)
     plot_D_2X(a,b,M2)
     plot_func(a,b)
 
     trap = trapez(a,b,M2[1])
-    simp =Simpson(a,b,n)
+    simp =Simpson(a,b,m)
 
     print("Трапеция | ","n = ",trap[1]," I ~ ",trap[0])
 
     print("Cимпсон  |  n = 10","   I ~ ",simp)
+    print("-------------------------------------------------------")
 
     rk = Runge_Kuta3()
-    print("Рунге-Кута - 3 порядка | ", "n = " ,rk[0], "|  y' = ", np.round(rk[1],5))
+    print("Рунге-Кутта - 3 порядка:")
+    print("y1 = ",np.round(rk[1][0],5))
+    print("y2 = ",np.round(rk[1][1],5))
+    print("y3 = ",np.round(rk[1][2],5))
     rk2 = Runge_Kuta4()
-    print("Рунге-Кута - 4 порядка | ", "n = " ,rk2[0], "|  y' = ", np.round(rk2[1],5))
+    print("Рунге-Кутта - 4 порядка:")
+    print("y1 = ",np.round(rk2[1][0],5))
+    print("y2 = ",np.round(rk2[1][1],5))
+    print("y3 = ",np.round(rk2[1][2],5))
     pk = prognoz()
-    print("Прогноза коррекции | ", "n = ","упс", "|  y' = ", np.round(pk[2],5))
+    print("Прогноза коррекции:")
+    print("y1 = ",np.round(pk[1][0],5))
+    print("y2 = ",np.round(pk[1][1],5))
+    print("y3 = ",np.round(pk[1][2],5))
     plt.figure("Графики")
     plt.grid(True)
-    leg1,leg2,leg3 = plt.plot(rk[2],rk[3],rk2[2], rk2[3],pk[0],pk[1])
-    plt.legend((leg1,leg2,leg3),("Рунге- Кута 3 порядка","Рунге- Кута 4 порядка","Прогноза коррекции"))
-
+    leg1,leg2,leg3 = plt.plot(rk[0],rk[1],rk2[0], rk2[1],pk[0],pk[1])
+    plt.legend((leg1,leg2,leg3),("Рунге- Кутта 3 порядка","Рунге- Кутта 4 порядка","Прогноза коррекции"))
     plt.grid(True)
     plt.show()
